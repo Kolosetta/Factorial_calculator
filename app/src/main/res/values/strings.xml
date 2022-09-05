@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Factorial Calculator</string>
+    <string name="calculate">Вычислить</string>
+</resources>
