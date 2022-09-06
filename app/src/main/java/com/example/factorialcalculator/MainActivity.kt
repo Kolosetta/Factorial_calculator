@@ -21,26 +21,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         observeViewModel()
-        binding.buttonCalculate.setOnClickListener{
+        binding.buttonCalculate.setOnClickListener {
             viewModel.calculate(binding.editTextNumber.text.toString())
         }
 
     }
 
-    private fun observeViewModel(){
-        viewModel.state.observe(this){
-            if(it.isError){
-                Toast.makeText(this, "Необходимо ввести значение", Toast.LENGTH_SHORT).show()
+    private fun observeViewModel() {
+        viewModel.state.observe(this) {
+            binding.progressBarLoading.visibility = View.GONE
+            binding.buttonCalculate.isEnabled = true
+            when (it) {
+                is Error -> {
+                    Toast.makeText(this, "Необходимо ввести значение", Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is Progress -> {
+                    binding.progressBarLoading.visibility = View.VISIBLE
+                    binding.buttonCalculate.isEnabled = false
+                }
+                is Factorial -> binding.textView.text = it.factorial
+
             }
-            if(it.isInProgress){
-                binding.progressBarLoading.visibility = View.VISIBLE
-                binding.buttonCalculate.isEnabled = false
-            }
-            else {
-                binding.progressBarLoading.visibility = View.GONE
-                binding.buttonCalculate.isEnabled = true
-            }
-            binding.textView.text = it.factorial
         }
     }
 }
